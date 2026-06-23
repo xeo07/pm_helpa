@@ -502,8 +502,9 @@ const Q = [
 // ═══════════════════════════════════════════════
 let selTopics = new Set(TOPICS.map(t => t.id));
 let mode = 'shuffle';
-let quiz = [], idx = 0, answered = false;
+let quiz = [], idx = 0, answered = false, optsRevealed = false;
 let res = { correct:[], wrong:[], skipped:[] };
+let retryMode = false;
 
 // ═══════════════════════════════════════════════
 //  INIT
@@ -567,6 +568,7 @@ function startQuiz() {
   if (mode === 'shuffle') quiz = shuffle([...quiz]);
   idx = 0;
   res = { correct:[], wrong:[], skipped:[] };
+  retryMode = false;
   show('s-quiz');
   renderQ();
 }
@@ -581,6 +583,7 @@ function shuffle(a) {
 
 function renderQ() {
   answered = false;
+  optsRevealed = false;
   const q = quiz[idx];
   const total = quiz.length;
   const pct = (idx / total) * 100;
@@ -613,15 +616,27 @@ function renderQ() {
     optsEl.appendChild(btn);
   });
 
+  // show blur overlay
+  const overlay = document.getElementById('blur-overlay');
+  overlay.classList.remove('hidden');
+
   document.getElementById('q-explain').classList.remove('on');
   document.getElementById('exp-body').innerHTML = '';
   document.getElementById('btn-next').style.display = 'none';
   document.getElementById('btn-skip').style.display = 'inline-block';
 }
 
+function revealOpts() {
+  optsRevealed = true;
+  document.getElementById('blur-overlay').classList.add('hidden');
+}
+
 function pick(btn, isCorrect, q, opts) {
   if (answered) return;
+  if (!optsRevealed) return; // must reveal first
   answered = true;
+
+  document.getElementById('blur-overlay').classList.add('hidden');
 
   document.querySelectorAll('.opt').forEach((b, i) => {
     b.disabled = true;
@@ -645,6 +660,8 @@ function pick(btn, isCorrect, q, opts) {
 function skipQ() {
   if (answered) return;
   answered = true;
+  optsRevealed = true;
+  document.getElementById('blur-overlay').classList.add('hidden');
   const q = quiz[idx];
   res.skipped.push(q);
 
@@ -709,6 +726,43 @@ function showRes() {
     });
   });
 
+  // topic progress
+  const topicsInQuiz = [...new Set(quiz.map(q => q.t))];
+  const tpList = document.getElementById('topic-progress-list');
+  tpList.innerHTML = '';
+  topicsInQuiz.forEach(tid => {
+    const topicQ = quiz.filter(q => q.t === tid);
+    const topicCorrect = res.correct.filter(q => q.t === tid).length;
+    const topicWrong = res.wrong.filter(q => q.t === tid).length;
+    const topicSkipped = res.skipped.filter(q => q.t === tid).length;
+    const topicTotal = topicQ.length;
+    const topicPct = Math.round((topicCorrect / topicTotal) * 100);
+    const topic = TOPICS.find(t => t.id === tid);
+    const barColor = topicPct >= 70 ? 'var(--green)' : topicPct >= 40 ? 'var(--yellow)' : 'var(--red)';
+    const item = document.createElement('div');
+    item.className = 'tp-item';
+    item.innerHTML =
+      '<div class="tp-header">' +
+        '<span class="tp-name">' + topic.name + '</span>' +
+        '<span class="tp-stat">' + topicCorrect + '/' + topicTotal + ' · ' + topicPct + '%</span>' +
+      '</div>' +
+      '<div class="tp-bar-bg"><div class="tp-bar" style="width:0%;background:' + barColor + '" data-w="' + topicPct + '"></div></div>';
+    tpList.appendChild(item);
+  });
+  // animate bars
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      tpList.querySelectorAll('.tp-bar').forEach(bar => {
+        bar.style.width = bar.dataset.w + '%';
+      });
+    });
+  });
+
+  // retry wrong button
+  const toRetry = [...res.wrong, ...res.skipped];
+  const retryBtn = document.getElementById('btn-retry-wrong');
+  retryBtn.style.display = toRetry.length > 0 ? 'inline-block' : 'none';
+
   // repeat list
   const toRepeat = [...res.wrong, ...res.skipped];
   document.getElementById('rep-badge').textContent = toRepeat.length;
@@ -732,6 +786,17 @@ function showRes() {
       list.appendChild(item);
     });
   }
+}
+
+function retryWrong() {
+  const toRetry = [...res.wrong, ...res.skipped];
+  if (toRetry.length === 0) return;
+  quiz = shuffle([...toRetry]);
+  idx = 0;
+  res = { correct:[], wrong:[], skipped:[] };
+  retryMode = true;
+  show('s-quiz');
+  renderQ();
 }
 
 function goMenu() { show('s-menu'); }

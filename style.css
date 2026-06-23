@@ -121,4 +121,25 @@ a{color:inherit;text-decoration:none}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 
+/* ── BLUR ── */
+.opts-wrap{position:relative}
+.blur-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;border-radius:10px;background:rgba(13,15,20,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.blur-overlay.hidden{display:none}
+.show-opts-btn{padding:10px 22px;background:var(--accent);color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:opacity .15s;white-space:nowrap}
+.show-opts-btn:hover{opacity:.85}
+.opts{display:flex;flex-direction:column;gap:9px;min-height:60px}
+
+/* ── TOPIC PROGRESS ── */
+.topic-progress-section{margin-bottom:28px}
+.tp-item{margin-bottom:14px}
+.tp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:13px}
+.tp-name{font-weight:600;color:var(--text)}
+.tp-stat{color:var(--muted);font-family:monospace;font-size:12px}
+.tp-bar-bg{background:var(--border);border-radius:99px;height:6px;overflow:hidden}
+.tp-bar{height:100%;border-radius:99px;transition:width .6s ease}
+
+/* ── RETRY WRONG ── */
+.btn-retry-wrong{padding:12px 22px;background:rgba(255,94,109,.15);color:var(--red);border:1px solid rgba(255,94,109,.35);border-radius:10px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s}
+.btn-retry-wrong:hover{background:rgba(255,94,109,.25)}
+
 @media(max-width:560px){.q-card{padding:16px}.q-text{font-size:15px}}

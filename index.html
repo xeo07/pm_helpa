@@ -44,7 +44,12 @@
     <div class="q-id" id="q-id"></div>
     <div class="q-text" id="q-text"></div>
     <div id="q-code"></div>
+    <div style="position:relative">
+    <div class="blur-overlay" id="blur-overlay">
+      <button class="show-opts-btn" onclick="revealOpts()">👁 Показать варианты</button>
+    </div>
     <div class="opts" id="q-opts"></div>
+    </div>
     <div class="explain" id="q-explain">
       <div class="exp-title">💡 Разбор</div>
       <div id="exp-body"></div>
@@ -82,12 +87,17 @@
     <div class="stat r"><div class="stat-val" id="r-wrong">0</div><div class="stat-lab">ошибок</div></div>
     <div class="stat y"><div class="stat-val" id="r-skip">0</div><div class="stat-lab">пропущено</div></div>
   </div>
+  <div class="topic-progress-section" id="topic-progress-section">
+    <div class="rep-title">📊 Прогресс по разделам</div>
+    <div id="topic-progress-list"></div>
+  </div>
   <div class="rep-section" id="rep-section">
     <div class="rep-title">🔁 Стоит повторить <span class="rep-badge" id="rep-badge">0</span></div>
     <div class="rep-list" id="rep-list"></div>
   </div>
   <div class="res-actions">
     <button class="btn-again" onclick="startQuiz()">Пройти ещё раз</button>
+    <button class="btn-retry-wrong" id="btn-retry-wrong" onclick="retryWrong()" style="display:none">🔁 Прорешать ошибки</button>
     <button class="btn-menu" onclick="goMenu()">← В меню</button>
   </div>
 </div>
