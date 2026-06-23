@@ -766,6 +766,8 @@ function showRes() {
   // repeat list
   const toRepeat = [...res.wrong, ...res.skipped];
   document.getElementById('rep-badge').textContent = toRepeat.length;
+  const toggleBtn = document.getElementById('btn-toggle-answers');
+  if (toggleBtn) toggleBtn.style.display = toRepeat.length ? 'inline-block' : 'none';
 
   const list = document.getElementById('rep-list');
   list.innerHTML = '';
@@ -813,4 +815,14 @@ function esc(s) {
     .replace(/&/g,'&amp;')
     .replace(/</g,'&lt;')
     .replace(/>/g,'&gt;');
+}
+
+function toggleAnswers() {
+  const sec = document.getElementById('rep-section');
+  const btn = document.getElementById('btn-toggle-answers');
+  if (!sec || !btn) return;
+
+  const opened = sec.style.display !== 'none';
+  sec.style.display = opened ? 'none' : 'block';
+  btn.textContent = opened ? 'Показать ответы' : 'Скрыть ответы';
 }
