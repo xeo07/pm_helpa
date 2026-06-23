@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Экзамен JS / Vue</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-logo">exam<span>.js</span></div>
+  <div class="hdr-right">JS · DOM · Vue.js</div>
+</div>
+
+<div class="wrap">
+
+<!-- ══ MENU ══ -->
+<div class="screen on" id="s-menu">
+  <div class="menu-title">Выбери темы</div>
+  <div class="menu-sub">Отметь что хочешь повторить — можно несколько</div>
+  <div class="topic-grid" id="topic-grid"></div>
+
+  <div style="margin-bottom:18px">
+    <div style="font-size:13px;color:var(--muted);margin-bottom:10px">Порядок вопросов</div>
+    <div class="menu-row">
+      <button class="mode-btn on" onclick="setMode('shuffle',this)">🔀 Случайный</button>
+      <button class="mode-btn" onclick="setMode('order',this)">📋 По порядку</button>
+      <button class="sel-all" onclick="selectAll()">Выбрать все</button>
+      <button class="sel-all" onclick="deselectAll()">Снять все</button>
+    </div>
+  </div>
+
+  <button class="start-btn" id="start-btn" onclick="startQuiz()">Начать тест →</button>
+</div>
+
+<!-- ══ QUIZ ══ -->
+<div class="screen" id="s-quiz">
+  <div class="q-bar-wrap"><div class="q-bar" id="q-bar"></div></div>
+  <div class="q-meta">
+    <div class="q-num" id="q-counter">1 / 30</div>
+    <div class="q-topic" id="q-topic-label"></div>
+  </div>
+  <div class="q-card">
+    <div class="q-id" id="q-id"></div>
+    <div class="q-text" id="q-text"></div>
+    <div id="q-code"></div>
+    <div class="opts" id="q-opts"></div>
+    <div class="explain" id="q-explain">
+      <div class="exp-title">💡 Разбор</div>
+      <div id="exp-body"></div>
+    </div>
+  </div>
+  <div class="q-actions">
+    <button class="btn-skip" id="btn-skip" onclick="skipQ()">Пропустить</button>
+    <button class="btn-next" id="btn-next" onclick="nextQ()">Следующий →</button>
+  </div>
+</div>
+
+<!-- ══ RESULTS ══ -->
+<div class="screen" id="s-res">
+  <div class="res-hero">
+    <div class="res-emoji" id="r-emoji"></div>
+    <div class="res-title" id="r-title"></div>
+    <div class="res-sub" id="r-sub"></div>
+  </div>
+  <div class="ring-wrap">
+    <div class="ring-outer">
+      <svg width="130" height="130" viewBox="0 0 130 130">
+        <circle cx="65" cy="65" r="54" fill="none" stroke="#252c3e" stroke-width="9"/>
+        <circle id="r-circle" cx="65" cy="65" r="54" fill="none" stroke="#7c6aff"
+                stroke-width="9" stroke-linecap="round"
+                stroke-dasharray="339.3" stroke-dashoffset="339.3"/>
+      </svg>
+      <div class="ring-text">
+        <div class="ring-pct" id="r-pct">0%</div>
+        <div class="ring-label">результат</div>
+      </div>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat g"><div class="stat-val" id="r-correct">0</div><div class="stat-lab">правильно</div></div>
+    <div class="stat r"><div class="stat-val" id="r-wrong">0</div><div class="stat-lab">ошибок</div></div>
+    <div class="stat y"><div class="stat-val" id="r-skip">0</div><div class="stat-lab">пропущено</div></div>
+  </div>
+  <div class="rep-section" id="rep-section">
+    <div class="rep-title">🔁 Стоит повторить <span class="rep-badge" id="rep-badge">0</span></div>
+    <div class="rep-list" id="rep-list"></div>
+  </div>
+  <div class="res-actions">
+    <button class="btn-again" onclick="startQuiz()">Пройти ещё раз</button>
+    <button class="btn-menu" onclick="goMenu()">← В меню</button>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+
+<script src="script.js"></script>
+</body>
+</html>
